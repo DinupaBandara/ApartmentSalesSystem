@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Dashboard - SkyLine</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* Welcome Banner - Admin Variant */
+        .welcome-banner {
+            background-color: var(--color-sapphire-pro); color: var(--color-on-primary);
+            border-radius: 12px; padding: 32px; position: relative; overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .banner-bg {
+            position: absolute; inset: 0; opacity: 0.15;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDR7PkCiGXa77vd1_2ib7pZCzWoMhFvcZ1TJADyMgqokROOWJnagVojHvbDiWPVqH4nJorio3KNgnjU8LTkMhdwUFtzZn2Zg8b__u3rd2TiwNOqF-yiHERtM2C--5Blu8dRlMHHWCONhmjpdW8tWeYbJKFkBx4UhowoXwGpEL5U9hUF-SHhdoeDzCxdKXdwvOnikmLh1kjP1cdfJsh6qImMrhKGcLMkjD-8r_G9r4F0StvsbzA-m8Jh');
+            background-size: cover; background-position: center;
+        }
+        .banner-content { position: relative; z-index: 10; }
+        .banner-content p { max-width: 42rem; opacity: 0.9; margin-top: 8px; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            gap: var(--space-gutter);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .stat-card {
+            background-color: var(--color-surface); border-radius: 12px; padding: 24px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border: 1px solid rgba(197, 198, 205, 0.3);
+            transition: box-shadow 0.2s;
+        }
+        .stat-card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .stat-title { color: var(--color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { color: var(--color-primary); margin-bottom: 8px; }
+        .stat-meta { display: flex; align-items: center; gap: 4px; }
+
+        /* Action Grid */
+        .action-grid { display: grid; gap: var(--space-gutter); grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+        .solid-tile {
+            background-color: var(--color-surface-container-lowest); padding: 24px; border-radius: 12px;
+            border: 1px solid rgba(197, 198, 205, 0.3); display: flex; flex-direction: column;
+            justify-content: flex-start; transition: all 0.2s; cursor: pointer;
+        }
+        .solid-tile:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
+        .icon-circle {
+            width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar & Global Styles -->
+<div th:replace="~{Admin/fragments/admin-sidebar :: admin-sidebar}"></div>
+
+<div class="mobile-header">
+    <h1 class="headline-lg-mobile" style="color: var(--color-primary);">SkyLine Admin</h1>
+    <button class="menu-btn" onclick="toggleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+</div>
+
+<main class="main-content">
+    <div class="container">
+
+        <!-- Welcome Banner -->
+        <header class="welcome-banner">
+            <div class="banner-bg"></div>
+            <div class="banner-content">
+                <h1 class="display-lg">Admin Overview, <span th:text="${session.loggedInAdmin != null ? session.loggedInAdmin.fullName : 'Admin'}">Admin</span></h1>
+                <p class="body-lg">Monitor system health, manage clients, and oversee property inventory from your control center.</p>
+            </div>
+        </header>
+
+        <!-- Quick Stats Grid -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title label-sm">Total Registered Clients</span>
+                    <span class="material-symbols-outlined" style="color: var(--color-sapphire-pro);">groups</span>
+                </div>
+                <div class="stat-value headline-lg">142</div>
+                <div class="stat-meta" style="color: var(--color-secondary);">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">trending_up</span>
+                    <span class="label-sm">+5 this week</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title label-sm">Active Properties</span>
+                    <span class="material-symbols-outlined" style="color: var(--color-secondary);">apartment</span>
+                </div>
+                <div class="stat-value headline-lg">38</div>
+                <div class="stat-meta" style="color: var(--color-on-surface-variant);">
+                    <span class="label-sm">Across 4 locations</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title label-sm">Pending Reservations</span>
+                    <span class="material-symbols-outlined" style="color: var(--color-error);">assignment_late</span>
+                </div>
+                <div class="stat-value headline-lg">12</div>
+                <div class="stat-meta" style="color: var(--color-error);">
+                    <span class="material-symbols-outlined" style="font-size: 16px;">error</span>
+                    <span class="label-sm">Requires approval</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions Grid -->
+        <h2 class="headline-md" style="margin-top: 16px;">Quick Actions</h2>
+        <section class="action-grid">
+            <a class="solid-tile" th:href="@{/admin/apartments/add}">
+                <div class="icon-circle" style="background-color: var(--color-primary-fixed); color: var(--color-sapphire-pro);">
+                    <span class="material-symbols-outlined">add_business</span>
+                </div>
+                <h3 class="headline-md" style="color: var(--color-primary); margin-bottom: 8px;">Add Apartment</h3>
+                <p class="body-sm" style="color: var(--color-on-surface-variant);">List a new property in the system inventory.</p>
+            </a>
+
+            <a class="solid-tile" th:href="@{/admin/reservations}">
+                <div class="icon-circle" style="background-color: var(--color-secondary-container); color: var(--color-on-secondary-container);">
+                    <span class="material-symbols-outlined">fact_check</span>
+                </div>
+                <h3 class="headline-md" style="color: var(--color-primary); margin-bottom: 8px;">Review Reservations</h3>
+                <p class="body-sm" style="color: var(--color-on-surface-variant);">Approve or decline client booking requests.</p>
+            </a>
+        </section>
+
+    </div>
+</main>
+
+</body>
+</html>

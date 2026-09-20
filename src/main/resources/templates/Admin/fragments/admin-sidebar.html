@@ -1,0 +1,261 @@
+<nav th:fragment="admin-sidebar" class="sidebar" id="mainSidebar">
+    <style>
+        /* =========================================
+           GLOBAL COMMON STYLES
+           ========================================= */
+        :root {
+            --color-primary: #091426;
+            --color-on-primary: #ffffff;
+            --color-primary-fixed: #d8e3fb;
+            --color-primary-container: #1e293b;
+            --color-secondary: #006c4a;
+            --color-secondary-container: #82f5c1;
+            --color-on-secondary-container: #00714e;
+            --color-secondary-fixed: #85f8c4;
+            --color-error: #ba1a1a;
+            --color-on-error: #ffffff;
+            --color-error-container: #ffdad6;
+            --color-tertiary-container: #471c00;
+            --color-background: #f8f9ff;
+            --color-on-background: #0b1c30;
+            --color-surface: #f8f9ff;
+            --color-on-surface: #0b1c30;
+            --color-on-surface-variant: #45474c;
+            --color-surface-container-lowest: #ffffff;
+            --color-surface-container-low: #eff4ff;
+            --color-surface-container-high: #dce9ff;
+            --color-outline-variant: #c5c6cd;
+            --color-slate-200: #E2E8F0;
+            --color-sapphire-pro: #1E3A8A;
+
+            --space-base: 8px;
+            --space-stack-sm: 12px;
+            --space-margin-mobile: 16px;
+            --space-gutter: 24px;
+            --space-stack-md: 24px;
+            --space-margin-desktop: 40px;
+            --space-stack-lg: 48px;
+            --container-max: 1440px;
+
+            --font-display: 'Montserrat', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--color-background);
+            color: var(--color-on-background);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 24px;
+            min-height: 100vh;
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* HIDE SCROLLBARS GLOBALLY */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        .display-lg { font-family: var(--font-display); font-size: 48px; line-height: 56px; font-weight: 700; letter-spacing: -0.02em; }
+        .headline-lg { font-family: var(--font-display); font-size: 32px; line-height: 40px; font-weight: 600; }
+        .headline-md { font-family: var(--font-display); font-size: 24px; line-height: 32px; font-weight: 600; }
+        .headline-lg-mobile { font-family: var(--font-display); font-size: 24px; line-height: 32px; font-weight: 600; }
+        .body-lg { font-family: var(--font-body); font-size: 18px; line-height: 28px; font-weight: 400; }
+        .body-md { font-family: var(--font-body); font-size: 16px; line-height: 24px; font-weight: 400; }
+        .body-sm { font-family: var(--font-body); font-size: 14px; line-height: 20px; font-weight: 400; }
+        .label-md { font-family: var(--font-body); font-size: 14px; line-height: 16px; font-weight: 600; letter-spacing: 0.01em; }
+        .label-sm { font-family: var(--font-body); font-size: 12px; line-height: 16px; font-weight: 500; }
+
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-filled { font-variation-settings: 'FILL' 1; }
+
+        /* =========================================
+           STRUCTURAL LAYOUT & ALIGNMENT FIX
+           ========================================= */
+        .main-content {
+            flex: 1; min-height: 100vh;
+            background-color: var(--color-surface-container-lowest);
+            padding: 88px var(--space-margin-mobile) var(--space-margin-mobile);
+            width: 100%;
+            transition: margin-left 0.3s ease;
+        }
+
+        .container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-stack-md);
+        }
+
+        @media (min-width: 768px) {
+            .main-content { margin-left: 280px; padding: var(--space-margin-desktop); }
+            .container { gap: var(--space-stack-lg); }
+            body.sidebar-collapsed .main-content { margin-left: 88px; }
+        }
+
+        .mobile-header {
+            display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; width: 100%;
+            background-color: var(--color-surface); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); z-index: 50; padding: 16px var(--space-margin-mobile);
+        }
+        @media (min-width: 768px) { .mobile-header { display: none; } }
+        .menu-btn { background: none; border: none; color: var(--color-primary); cursor: pointer; }
+
+        /* =========================================
+           SIDEBAR COMPONENT STYLES
+           ========================================= */
+        .sidebar {
+            display: none; position: fixed; left: 0; top: 0; height: 100%; width: 280px;
+            background-color: var(--color-surface); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            z-index: 50; flex-direction: column; padding: 16px;
+            transition: width 0.3s ease; overflow-x: hidden;
+        }
+        @media (min-width: 768px) { .sidebar { display: flex; } }
+        .sidebar.collapsed { width: 88px; }
+
+        .sidebar-header {
+            display: flex; align-items: center; gap: 12px; margin: 16px 0 32px 8px; transition: margin 0.3s ease;
+        }
+
+        .brand-icon {
+            background-color: var(--color-sapphire-pro); /* Differentiate Admin visually with blue */
+            color: var(--color-on-primary); width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: background-color 0.2s; flex-shrink: 0;
+        }
+        .brand-icon:hover { background-color: var(--color-primary); }
+        .brand-icon .hover-icon { display: none; }
+        .brand-icon:hover .default-icon { display: none; }
+        .brand-icon:hover .hover-icon { display: block; }
+        .brand-text { white-space: nowrap; opacity: 1; transition: opacity 0.2s ease; }
+
+        .nav-links { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            border-radius: 8px; transition: all 0.2s; color: var(--color-on-surface-variant);
+            text-decoration: none; white-space: nowrap;
+        }
+        .nav-item:hover { background-color: var(--color-surface-container-high); transform: scale(0.98); }
+        .nav-item.active {
+            background-color: var(--color-primary-fixed); /* Differentiate active state */
+            color: var(--color-sapphire-pro);
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding-top: 16px; border-top: 1px solid rgba(197, 198, 205, 0.3);
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .profile-card-btn {
+            display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px;
+            border: 1px solid transparent; text-decoration: none; transition: all 0.2s;
+            cursor: pointer; white-space: nowrap;
+        }
+        .profile-card-btn:hover { background-color: var(--color-surface-container-high); }
+        .profile-card-btn.active {
+            background-color: var(--color-primary-fixed);
+            border: 1px solid rgba(30, 58, 138, 0.2);
+        }
+
+        .profile-pic {
+            width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
+            background-color: var(--color-sapphire-pro); display: flex; align-items: center;
+            justify-content: center; color: var(--color-on-primary); flex-shrink: 0;
+        }
+
+        .profile-info { display: flex; flex-direction: column; overflow: hidden; transition: opacity 0.2s ease; }
+        .profile-name { font-size: 14px; font-weight: 600; color: var(--color-primary); white-space: nowrap; text-overflow: ellipsis; overflow: hidden; line-height: 1.2; margin-bottom: 4px; }
+        .profile-role { font-size: 12px; color: var(--color-on-surface-variant); line-height: 1.2; }
+        .profile-card-btn.active .profile-name, .profile-card-btn.active .profile-role { color: var(--color-sapphire-pro); }
+
+        .logout-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px;
+            border-radius: 8px; color: var(--color-error, #ba1a1a); background-color: rgba(186, 26, 26, 0.08);
+            text-decoration: none; transition: all 0.2s; font-weight: 600; font-size: 14px; white-space: nowrap;
+        }
+        .logout-btn:hover { background-color: var(--color-error, #ba1a1a); color: #ffffff; transform: translateY(-1px); }
+
+        /* COLLAPSED STATE OVERRIDES */
+        .sidebar.collapsed .brand-text, .sidebar.collapsed .nav-text, .sidebar.collapsed .profile-info { display: none; }
+        .sidebar.collapsed .sidebar-header { margin-left: 4px; justify-content: center; }
+        .sidebar.collapsed .nav-item { justify-content: center; padding: 12px; gap: 0; }
+        .sidebar.collapsed .profile-card-btn { justify-content: center; padding: 10px 0; gap: 0; }
+        .sidebar.collapsed .logout-btn { justify-content: center; padding: 12px 0; gap: 0; }
+    </style>
+
+    <!-- Header with Toggle Action -->
+    <div class="sidebar-header">
+        <div class="brand-icon" onclick="toggleSidebar()" title="Expand/Collapse Menu">
+            <span class="material-symbols-outlined default-icon" style="font-size: 24px;">admin_panel_settings</span>
+            <span class="material-symbols-outlined hover-icon" style="font-size: 24px;">menu</span>
+        </div>
+        <div class="brand-text">
+            <h2 class="headline-md" style="color: var(--color-primary); font-size: 22px;">SkyLine</h2>
+            <p class="label-sm" style="color: var(--color-on-surface-variant);">Admin Portal</p>
+        </div>
+    </div>
+
+    <!-- Admin Navigation Links -->
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}" class="nav-item" th:classappend="${activeTab == 'dashboard'} ? 'active' : ''">
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'dashboard'} ? 'icon-filled' : ''">dashboard</span>
+            <span class="nav-text label-md">Dashboard</span>
+        </a>
+        <a th:href="@{/admin/clients}" class="nav-item" th:classappend="${activeTab == 'clients'} ? 'active' : ''">
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'clients'} ? 'icon-filled' : ''">groups</span>
+            <span class="nav-text label-md">Manage Clients</span>
+        </a>
+        <a th:href="@{/admin/admin-management}" class="nav-item" th:classappend="${activeTab == 'admins'} ? 'active' : ''">
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'clients'} ? 'icon-filled' : ''">identity_platform</span>
+            <span class="nav-text label-md">Manage Admins</span>
+        </a>
+        <a th:href="@{/admin/apartments}" class="nav-item" th:classappend="${activeTab == 'apartments'} ? 'active' : ''">
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'apartments'} ? 'icon-filled' : ''">apartment</span>
+            <span class="nav-text label-md">Apartments</span>
+        </a>
+        <a th:href="@{/admin/reservations}" class="nav-item" th:classappend="${activeTab == 'reservations'} ? 'active' : ''">
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'reservations'} ? 'icon-filled' : ''">real_estate_agent</span>
+            <span class="nav-text label-md">Reservations</span>
+        </a>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="sidebar-footer">
+        <!-- Admin Profile Button -->
+        <a th:href="@{/admin/profile}" class="profile-card-btn" th:classappend="${activeTab == 'profile'} ? 'active' : ''">
+            <div class="profile-pic">
+                <span class="material-symbols-outlined">manage_accounts</span>
+            </div>
+            <div class="profile-info">
+                <span class="profile-name" th:text="${session.loggedInAdmin != null ? session.loggedInAdmin.fullName : 'Admin Name'}">Admin Name</span>
+                <span class="profile-role" th:text="${session.loggedInAdmin != null ? session.loggedInAdmin.role : 'Administrator'}">SUPER_ADMIN</span>
+            </div>
+        </a>
+
+        <!-- Logout Button -->
+        <a th:href="@{/logout}" class="logout-btn">
+            <span class="material-symbols-outlined" style="font-size: 20px;">logout</span>
+            <span class="nav-text">Logout</span>
+        </a>
+    </div>
+
+    <!-- INLINE SCRIPT: Runs instantly to sync collapsed state -->
+    <script>
+        if (localStorage.getItem("admin-sidebar-collapsed") === "true") {
+            document.getElementById('mainSidebar').classList.add('collapsed');
+            document.body.classList.add('sidebar-collapsed');
+        }
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('mainSidebar');
+            sidebar.classList.toggle('collapsed');
+            document.body.classList.toggle('sidebar-collapsed');
+            localStorage.setItem("admin-sidebar-collapsed", sidebar.classList.contains('collapsed'));
+        };
+    </script>
+</nav>

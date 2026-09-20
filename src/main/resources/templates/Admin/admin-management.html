@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Admins - SkyLine</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--color-slate-200);
+    }
+
+    .btn-primary {
+      background: var(--color-sapphire-pro); color: var(--color-on-primary); border: none;
+      padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: #152d6b; }
+
+    /* Table Styles */
+    .table-card {
+      background-color: var(--color-surface); border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid rgba(197, 198, 205, 0.3);
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      background-color: var(--color-surface-container-low); color: var(--color-on-surface-variant);
+      font-family: var(--font-body); font-size: 12px; font-weight: 600; text-transform: uppercase;
+      padding: 16px 24px; border-bottom: 1px solid var(--color-slate-200); letter-spacing: 0.05em;
+    }
+    td {
+      padding: 16px 24px; border-bottom: 1px solid var(--color-slate-200);
+      color: var(--color-on-surface); font-size: 14px; vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background-color: var(--color-surface-container-lowest); }
+
+    .role-badge {
+      background-color: var(--color-primary-fixed); color: var(--color-sapphire-pro);
+      padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(9, 20, 38, 0.6);
+      backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.show { display: flex; opacity: 1; }
+
+    .modal-content {
+      background: var(--color-surface); width: 100%; max-width: 500px;
+      border-radius: 16px; padding: 32px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: translateY(20px); transition: transform 0.3s ease;
+    }
+    .modal-overlay.show .modal-content { transform: translateY(0); }
+
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .close-btn { background: none; border: none; color: var(--color-on-surface-variant); cursor: pointer; display: flex; }
+    .close-btn:hover { color: var(--color-error); }
+
+    /* Form Styles */
+    .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    label { font-size: 14px; font-weight: 600; color: var(--color-primary); }
+    input[type="text"], input[type="email"], input[type="password"], select {
+      width: 100%; background: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant);
+      border-radius: 8px; padding: 12px 16px; font-family: var(--font-body); font-size: 16px;
+      color: var(--color-on-surface); outline: none; transition: border-color 0.2s;
+    }
+    input:focus, select:focus { border-color: var(--color-sapphire-pro); box-shadow: 0 0 0 2px rgba(30,58,138,0.1); }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar & Global Styles -->
+<div th:replace="~{Admin/fragments/admin-sidebar :: admin-sidebar}"></div>
+
+<div class="mobile-header">
+  <h1 class="headline-lg-mobile" style="color: var(--color-primary);">SkyLine Admin</h1>
+  <button class="menu-btn" onclick="toggleSidebar()">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+</div>
+
+<main class="main-content">
+  <div class="container">
+
+    <div class="page-header">
+      <div>
+        <h1 class="headline-lg" style="color: var(--color-primary);">Manage Admins</h1>
+        <p class="body-sm" style="color: var(--color-on-surface-variant);">View and manage system administrators.</p>
+      </div>
+      <button class="btn-primary" onclick="openModal()">
+        <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+        New Admin
+      </button>
+    </div>
+
+    <!-- Alerts -->
+    <div th:if="${param.success}" style="background-color: #d1e7dd; color: #0f5132; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-weight: 600;">
+      New administrator successfully added.
+    </div>
+    <div th:if="${param.error}" style="background-color: #ffdad6; color: #ba1a1a; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-weight: 600;">
+      Failed to add admin. Ensure email ends with @admin.com.
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-card">
+      <table>
+        <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Email Address</th>
+          <th>System Role</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="admin : ${adminsList}">
+          <td style="font-weight: 600;" th:text="${admin.fullName}">John Doe</td>
+          <td th:text="${admin.email}">john@admin.com</td>
+          <td>
+            <span class="role-badge" th:text="${admin.role}">ADMIN</span>
+          </td>
+          <td>
+            <button style="background:none; border:none; color: var(--color-on-surface-variant); cursor: pointer;" title="Edit">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Add Admin Modal -->
+<div class="modal-overlay" id="addAdminModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="headline-md" style="color: var(--color-primary);">Add Administrator</h2>
+      <button class="close-btn" onclick="closeModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form th:action="@{/admin/admins/add}" method="post" th:object="${newAdmin}">
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" name="fullName" th:field="*{fullName}" type="text" placeholder="Jane Doe" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address (@admin.com)</label>
+        <input id="email" name="email" th:field="*{email}" type="email" placeholder="jane.doe@admin.com" pattern=".*@admin\.com$" title="Must end with @admin.com" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="role">System Role</label>
+        <select id="role" name="role" th:field="*{role}" required>
+          <option value="ADMIN">ADMIN</option>
+          <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Temporary Password</label>
+        <input id="password" name="password" th:field="*{password}" type="password" placeholder="••••••••" required/>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px;">
+        <button type="button" onclick="closeModal()" style="background: none; border: 1px solid var(--color-outline-variant); padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button type="submit" class="btn-primary">Create Admin</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('addAdminModal');
+
+  function openModal() {
+    modal.classList.add('show');
+  }
+
+  function closeModal() {
+    modal.classList.remove('show');
+  }
+
+  // Close modal if user clicks outside the content box
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      closeModal();
+    }
+  }
+</script>
+</body>
+</html>
