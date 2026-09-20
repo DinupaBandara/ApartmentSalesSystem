@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>EliteEstates - Authentication</title>
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* Exact mapping of your Tailwind Configuration */
+        :root {
+            --color-primary: #000000;
+            --color-on-primary: #ffffff;
+            --color-on-primary-80: rgba(255, 255, 255, 0.8);
+            --color-on-primary-90: rgba(255, 255, 255, 0.9);
+            --color-on-primary-60: rgba(255, 255, 255, 0.6);
+            --color-on-primary-20: rgba(255, 255, 255, 0.2);
+            --color-surface-lowest: #ffffff;
+            --color-surface-high: #eae7e9;
+            --color-slate-50: #F8FAFC;
+            --color-slate-200: #E2E8F0;
+            --color-on-surface: #1b1b1d;
+            --color-on-surface-variant: #45464d;
+            --color-charcoal: #334155;
+            --color-sapphire-pro: #1E3A8A;
+            --color-emerald-deep: #064E3B;
+            --color-emerald-hover: #04382A;
+
+            --spacing-base: 4px;
+            --spacing-gap-xs: 8px;
+            --spacing-gap-sm: 16px;
+            --spacing-gap-md: 24px;
+            --spacing-gap-lg: 48px;
+            --spacing-margin-mobile: 20px;
+            --spacing-margin-desktop: 64px;
+            --spacing-max-width: 1440px;
+
+            --font-montserrat: 'Montserrat', sans-serif;
+            --font-inter: 'Inter', sans-serif;
+        }
+
+        /* Basic Resets */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--color-slate-50);
+            color: var(--color-on-surface);
+            font-family: var(--font-inter);
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 400;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; }
+
+        /* Icon Reset */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Layout Structure */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: var(--spacing-gap-lg);
+            padding-bottom: var(--spacing-gap-lg);
+            padding-left: var(--spacing-margin-mobile);
+            padding-right: var(--spacing-margin-mobile);
+            width: 100%;
+            max-width: var(--spacing-max-width);
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) {
+            .main-container {
+                padding-left: var(--spacing-margin-desktop);
+                padding-right: var(--spacing-margin-desktop);
+            }
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 1024px;
+            background-color: var(--color-surface-lowest);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(15,23,42,0.05);
+            border: 1px solid var(--color-slate-200);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        @media (min-width: 768px) {
+            .auth-card { flex-direction: row; }
+        }
+
+        /* Left Side Image */
+        .auth-image-wrapper {
+            display: none;
+            width: 50%;
+            position: relative;
+            background-color: var(--color-surface-high);
+        }
+        @media (min-width: 768px) {
+            .auth-image-wrapper { display: block; }
+        }
+
+        .auth-bg-img {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA8rzuodauNRIsBJLCqwUcSSmlmQAarmiwqF4m3IKrGnU-rJ15OlLeoVWMOLiasG8axj5zEpr3BRdN8LJB2bbXG-B19OYhbxwsAWxLu0jOO3sHgQXjksvWvSyQi-wWIZlZNK-3ogzFB-od-L-Uh4RiiQ_3lRvHW__q1ASWj9MGK0ksm8IMTrnEff7lx69dsb6XCMJEcujK1b3qEY_iYCWdQVtaOoDOHn9YpOSXeFILwYoWouovnPtDI');
+        }
+
+        .auth-bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--spacing-gap-md);
+        }
+
+        /* Typography */
+        .display-lg {
+            font-family: var(--font-montserrat); font-size: 48px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 700;
+            color: var(--color-on-primary); margin-bottom: var(--spacing-gap-xs);
+        }
+        .body-lg {
+            font-family: var(--font-inter); font-size: 18px; line-height: 1.6; font-weight: 400;
+            color: var(--color-on-primary-90);
+        }
+
+        /* Right Side Form Panel */
+        .auth-form-wrapper {
+            width: 100%;
+            padding: var(--spacing-gap-md);
+            display: flex;
+            flex-direction: column;
+        }
+        @media (min-width: 768px) {
+            .auth-form-wrapper { width: 50%; padding: 48px; }
+        }
+
+        .mobile-header-wrap {
+            text-align: center;
+            margin-bottom: var(--spacing-gap-md);
+        }
+        @media (min-width: 768px) { .mobile-header-wrap { display: none; } }
+
+        .headline-lg-mobile {
+            font-family: var(--font-montserrat); font-size: 24px; line-height: 1.3; font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        /* Tabs System */
+        .tabs-container {
+            display: flex;
+            border-bottom: 1px solid var(--color-slate-200);
+            margin-bottom: var(--spacing-gap-md);
+        }
+        .tab-btn {
+            flex: 1;
+            padding-bottom: var(--spacing-gap-xs);
+            text-align: center;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+            font-family: var(--font-inter); font-size: 14px; line-height: 1; letter-spacing: 0.02em; font-weight: 600;
+        }
+        .tab-btn.active { border-bottom-color: var(--color-primary); color: var(--color-primary); }
+        .tab-btn.inactive { border-bottom-color: transparent; color: var(--color-on-surface-variant); }
+        .tab-btn.inactive:hover { color: var(--color-primary); }
+
+        .tab-content { display: none; flex-grow: 1; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Components */
+        .form-header-wrap { margin-bottom: var(--spacing-gap-sm); }
+        .headline-md {
+            font-family: var(--font-montserrat); font-size: 20px; line-height: 1.4; font-weight: 600;
+            color: var(--color-primary); margin-bottom: 8px;
+        }
+        .body-sm {
+            font-family: var(--font-inter); font-size: 14px; line-height: 1.4; font-weight: 400;
+            color: var(--color-on-surface-variant);
+        }
+
+        .form-container { display: flex; flex-direction: column; gap: var(--spacing-gap-sm); }
+
+        .input-label {
+            display: block; font-family: var(--font-inter); font-size: 14px; line-height: 1; letter-spacing: 0.02em; font-weight: 600;
+            color: var(--color-charcoal); margin-bottom: var(--spacing-base);
+        }
+        .input-field {
+            width: 100%; background-color: var(--color-surface-lowest); border: 1px solid var(--color-slate-200);
+            border-radius: 0.5rem; padding: 12px 16px; font-family: var(--font-inter); font-size: 16px; line-height: 1.5;
+            color: var(--color-on-surface); outline: none; transition: all 0.2s;
+        }
+        .input-field:focus { border-color: var(--color-sapphire-pro); box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1); }
+
+        .form-grid-2 { display: grid; grid-template-columns: 1fr; gap: var(--spacing-gap-sm); }
+        @media (min-width: 768px) { .form-grid-2 { grid-template-columns: repeat(2, 1fr); } }
+
+        .checkbox-row { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+        .checkbox-row-start { display: flex; align-items: flex-start; margin-top: 16px; }
+        .checkbox-container { display: flex; align-items: center; height: 20px; }
+        .checkbox-input {
+            height: 16px; width: 16px; border-radius: 0.25rem; border: 1px solid var(--color-slate-200); accent-color: var(--color-emerald-deep);
+        }
+        .checkbox-label {
+            margin-left: 8px; font-family: var(--font-inter); font-size: 14px; line-height: 1.4; font-weight: 400;
+            color: var(--color-on-surface-variant); display: block;
+        }
+        .checkbox-text-wrap { margin-left: 8px; font-size: 14px; }
+
+        .link-primary {
+            font-family: var(--font-inter); font-size: 14px; line-height: 1; letter-spacing: 0.02em; font-weight: 600;
+            color: var(--color-sapphire-pro); transition: color 0.2s;
+        }
+        .link-primary:hover { color: var(--color-primary); }
+        .link-inline { color: var(--color-sapphire-pro); transition: color 0.2s; }
+        .link-inline:hover { color: var(--color-primary); }
+
+        .btn-submit {
+            width: 100%; background-color: var(--color-emerald-deep); color: var(--color-on-primary);
+            font-family: var(--font-inter); font-size: 14px; line-height: 1; letter-spacing: 0.02em; font-weight: 600;
+            padding: 12px 16px; border-radius: 0.5rem; border: none; transition: background-color 0.2s;
+            margin-top: var(--spacing-gap-md); cursor: pointer;
+        }
+        .btn-submit:hover { background-color: var(--color-emerald-hover); }
+
+        /* Spring Boot Alerts */
+        .alerts { text-align: center; margin-bottom: 16px; font-weight: 600; font-size: 14px; }
+        .alert-error { color: #ba1a1a; margin-bottom: 8px; }
+        .alert-success { color: var(--color-emerald-deep); margin-bottom: 8px; }
+
+        /* Footer */
+        .site-footer { background-color: var(--color-primary); color: var(--color-on-primary); font-family: var(--font-inter); font-size: 14px; line-height: 1.4; font-weight: 400; width: 100%; }
+        .footer-top { display: grid; grid-template-columns: 1fr; gap: var(--spacing-gap-lg); padding: var(--spacing-gap-lg) var(--spacing-margin-mobile); width: 100%; max-width: var(--spacing-max-width); margin: 0 auto; }
+        @media (min-width: 768px) {
+            .footer-top { grid-template-columns: repeat(4, 1fr); padding-left: var(--spacing-margin-desktop); padding-right: var(--spacing-margin-desktop); }
+            .footer-col-span-2 { grid-column: span 2 / span 2; }
+        }
+        .footer-brand { font-family: var(--font-montserrat); font-size: 20px; line-height: 1.4; font-weight: 600; margin-bottom: 16px; }
+        .footer-desc { color: var(--color-on-primary-80); margin-bottom: 16px; max-width: 24rem; }
+        .footer-links-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .footer-link { color: var(--color-on-primary-80); transition: color 0.2s; }
+        .footer-link:hover { color: #a6f2d1; }
+        .footer-bottom {
+            padding: 16px var(--spacing-margin-mobile); border-top: 1px solid var(--color-on-primary-20);
+            width: 100%; max-width: var(--spacing-max-width); margin: 0 auto;
+        }
+        @media (min-width: 768px) { .footer-bottom { padding-left: var(--spacing-margin-desktop); padding-right: var(--spacing-margin-desktop); } }
+        .footer-copyright { color: var(--color-on-primary-60); text-align: center; font-size: 12px; }
+        @media (min-width: 768px) { .footer-copyright { text-align: left; } }
+    </style>
+</head>
+<body>
+
+<main class="main-container">
+    <div class="auth-card">
+
+        <!-- Left Side: Image/Branding -->
+        <div class="auth-image-wrapper">
+            <div class="auth-bg-img"></div>
+            <div class="auth-bg-overlay">
+                <h1 class="display-lg">EliteEstates</h1>
+                <p class="body-lg">Architectural Precision. Modern Comfort.</p>
+            </div>
+        </div>
+
+        <!-- Right Side: Auth Forms -->
+        <div class="auth-form-wrapper">
+
+            <div class="mobile-header-wrap">
+                <h1 class="headline-lg-mobile">EliteEstates</h1>
+            </div>
+
+            <!-- Dynamic Feedback Messages -->
+            <div class="alerts">
+                <p class="alert-error" th:if="${param.error}">Invalid email or password.</p>
+                <p class="alert-success" th:if="${param.registered}">Registration successful! Please log in.</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="tabs-container">
+                <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">
+                    Log In
+                </button>
+                <button class="tab-btn inactive" id="tab-register" onclick="switchTab('register')">
+                    Create Account
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div class="tab-content active" id="content-login">
+                <div class="form-header-wrap">
+                    <h2 class="headline-md">Welcome Back</h2>
+                    <p class="body-sm">Please enter your details to access your portfolio.</p>
+                </div>
+
+                <form th:action="@{/login}" method="post" class="form-container">
+                    <div>
+                        <label class="input-label" for="login-email">Email</label>
+                        <input class="input-field" id="login-email" name="email" placeholder="name@example.com" required type="email"/>
+                    </div>
+                    <div>
+                        <label class="input-label" for="login-password">Password</label>
+                        <input class="input-field" id="login-password" name="password" placeholder="••••••••" required type="password"/>
+                    </div>
+
+                    <div class="checkbox-row">
+                        <div class="checkbox-container">
+                            <input class="checkbox-input" id="remember-me" name="remember-me" type="checkbox"/>
+                            <label class="checkbox-label" for="remember-me">Remember me</label>
+                        </div>
+                        <div>
+                            <a class="link-primary" href="#">Forgot Password?</a>
+                        </div>
+                    </div>
+
+                    <button class="btn-submit" type="submit">Login</button>
+                </form>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="tab-content" id="content-register">
+                <div class="form-header-wrap">
+                    <h2 class="headline-md">Create an Account</h2>
+                    <p class="body-sm">Join EliteEstates to manage your luxury properties.</p>
+                </div>
+
+                <form th:action="@{/register}" method="post" th:object="${client}" class="form-container">
+                    <div>
+                        <label class="input-label" for="reg-name">Full Name</label>
+                        <input class="input-field" id="reg-name" th:field="*{fullName}" placeholder="John Doe" required type="text"/>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="input-label" for="reg-email">Email</label>
+                            <input class="input-field" id="reg-email" th:field="*{email}" placeholder="name@example.com" required type="email"/>
+                        </div>
+                        <div>
+                            <label class="input-label" for="reg-phone">Phone Number</label>
+                            <input class="input-field" id="reg-phone" th:field="*{phone}" placeholder="+1 (555) 000-0000" type="tel"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="input-label" for="reg-password">Password</label>
+                        <input class="input-field" id="reg-password" th:field="*{password}" placeholder="••••••••" required type="password"/>
+                    </div>
+                    <div>
+                        <label class="input-label" for="reg-confirm-password">Confirm Password</label>
+                        <input class="input-field" id="reg-confirm-password" placeholder="••••••••" required type="password"/>
+                    </div>
+
+                    <div class="checkbox-row-start">
+                        <div class="checkbox-container">
+                            <input class="checkbox-input" id="terms" name="terms" required type="checkbox"/>
+                        </div>
+                        <div class="checkbox-text-wrap">
+                            <label class="checkbox-label" for="terms">
+                                I agree to the <a class="link-inline" href="#">Terms of Service</a> and <a class="link-inline" href="#">Privacy Policy</a>.
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="btn-submit" type="submit">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-top">
+        <div class="footer-col-span-2">
+            <div class="footer-brand">EliteEstates</div>
+            <p class="footer-desc">Architectural Precision. Modern Comfort. Redefining luxury living spaces.</p>
+        </div>
+        <div>
+            <ul class="footer-links-list">
+                <li><a class="footer-link" href="#">About Us</a></li>
+                <li><a class="footer-link" href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+        <div>
+            <ul class="footer-links-list">
+                <li><a class="footer-link" href="#">Privacy Policy</a></li>
+                <li><a class="footer-link" href="#">Contact Support</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p class="footer-copyright">© 2024 EliteEstates Luxury Realty. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    function switchTab(tabId) {
+        const loginBtn = document.getElementById('tab-login');
+        const registerBtn = document.getElementById('tab-register');
+
+        if (tabId === 'login') {
+            loginBtn.classList.add('active');
+            loginBtn.classList.remove('inactive');
+            registerBtn.classList.add('inactive');
+            registerBtn.classList.remove('active');
+        } else {
+            registerBtn.classList.add('active');
+            registerBtn.classList.remove('inactive');
+            loginBtn.classList.add('inactive');
+            loginBtn.classList.remove('active');
+        }
+
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById('content-' + tabId).classList.add('active');
+    }
+
+    // Automatically check URL parameters for 'tab=register' on page load
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+        if (tab === 'register') {
+            switchTab('register');
+        } else {
+            switchTab('login');
+        }
+    };
+</script>
+</body>
+</html>

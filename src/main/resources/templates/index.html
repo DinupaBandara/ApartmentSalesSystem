@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EliteEstates - Luxury Realty</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* CSS Variables based on your previous config */
+    :root {
+      --primary: #000000;
+      --emerald-deep: #064E3B;
+      --sapphire-pro: #1E3A8A;
+      --charcoal: #334155;
+      --slate-50: #F8FAFC;
+      --slate-200: #E2E8F0;
+      --slate-400: #94A3B8;
+      --text-main: #1b1b1d;
+      --text-muted: #45464d;
+      --bg-main: #F8FAFC;
+      --font-body: 'Inter', sans-serif;
+      --font-display: 'Montserrat', sans-serif;
+    }
+
+    /* Basic Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text-main);
+      background-color: var(--bg-main);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Utility Classes */
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 64px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 20px;
+      }
+    }
+
+    .flex { display: flex; }
+    .grid { display: grid; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .gap-sm { gap: 16px; }
+    .gap-md { gap: 24px; }
+    .gap-lg { gap: 48px; }
+
+    /* Header */
+    header {
+      background-color: #ffffff;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+        gap: 24px;
+      }
+    }
+
+    .nav-links a {
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a.active {
+      color: var(--primary);
+      font-weight: 700;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .header-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-outline {
+      border: 1px solid var(--slate-200);
+      background: transparent;
+      color: var(--charcoal);
+    }
+
+    .btn-outline:hover { background: var(--slate-50); }
+
+    .btn-primary {
+      background: var(--emerald-deep);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover { background: #04382a; }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--slate-200);
+      margin-left: 8px;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 819px;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCiAbDems_bK_UGuTL28FtAUjz1TeOy-FPz-rhu2qwGMvJcbZuRt_5KU8DnffzoVUNyxzfieiAgbe_v8s7PrhgdCD83KwFWOD_KRdvCOTf-j7qYAd-XBu7OsdmXB_ASFPKvD9JNqid-TzyxFOqw6ttiA0PzySYl9AA_t5FwELorACZ_QmEdypFkJ_sV7kwfSJcZDiOlhsVt0Pt1dvhLi7d-8Tzri1h6vL0b8ZvAA7ko84VKXhvQpLAk');
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: 48px;
+      color: white;
+      max-width: 900px;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .search-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      text-align: left;
+    }
+
+    @media (max-width: 768px) {
+      .search-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hero h1 { font-size: 32px; }
+    }
+
+    .input-group {
+      flex: 1;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper { position: relative; }
+
+    .input-wrapper .material-symbols-outlined {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-400);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 4px;
+      border: 1px solid var(--slate-200);
+      font-family: var(--font-body);
+      font-size: 16px;
+      outline: none;
+      background: white;
+      transition: border-color 0.2s;
+    }
+
+    .form-control.with-icon { padding-left: 40px; }
+    .form-control:focus { border-color: var(--sapphire-pro); }
+    .btn-search {
+      height: 45px;
+      padding: 0 32px;
+    }
+
+    /* Sections General */
+    .section {
+      padding: 48px 0;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .view-all {
+      color: var(--sapphire-pro);
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .view-all:hover { text-decoration: underline; }
+
+    /* Property Grid */
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .property-card {
+      background: white;
+      border-radius: 8px;
+      border: 1px solid var(--slate-200);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05);
+      transition: box-shadow 0.2s;
+    }
+
+    .property-card:hover {
+      box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
+    }
+
+    .property-img-wrap {
+      position: relative;
+      height: 256px;
+      overflow: hidden;
+    }
+
+    .property-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .property-card:hover .property-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    .badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--emerald-deep);
+      border: 1px solid var(--slate-200);
+    }
+
+    .property-details {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .property-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .property-location {
+      color: var(--text-muted);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .property-price {
+      color: var(--sapphire-pro);
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .property-stats {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-top: 1px solid var(--slate-200);
+      padding-top: 16px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-item.bordered {
+      border-left: 1px solid var(--slate-200);
+    }
+
+    .stat-item .material-symbols-outlined {
+      color: var(--slate-400);
+      margin-bottom: 4px;
+    }
+
+    .stat-item span {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+
+    /* About Section */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    .about-content {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid var(--slate-200);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .about-content p {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .stat-block { padding-left: 16px; }
+    .stat-block-1 { border-left: 4px solid var(--emerald-deep); }
+    .stat-block-2 { border-left: 4px solid var(--sapphire-pro); }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .about-img {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--slate-200);
+      min-height: 300px;
+    }
+
+    .about-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Promo Banner */
+    .promo-banner {
+      background-color: var(--primary);
+      color: white;
+      border-radius: 8px;
+      padding: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .promo-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 24px;
+      }
+    }
+
+    .promo-content {
+      position: relative;
+      z-index: 10;
+      max-width: 600px;
+    }
+
+    .promo-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #a6f2d1;
+      margin-bottom: 16px;
+    }
+
+    .promo-banner h2 {
+      font-family: var(--font-display);
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .promo-banner p {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .promo-banner .btn {
+      position: relative;
+      z-index: 10;
+      background: white;
+      color: var(--primary);
+      padding: 16px 32px;
+      font-size: 14px;
+    }
+
+    .promo-banner .btn:hover { background: var(--slate-50); }
+
+    /* Footer */
+    footer {
+      background-color: var(--primary);
+      color: white;
+      font-size: 14px;
+      padding-top: 48px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .footer-col h4 {
+      color: #a6f2d1;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .footer-col a, .footer-col span {
+      display: block;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 8px;
+    }
+
+    .footer-col a:hover {
+      color: #a6f2d1;
+    }
+
+    .footer-icons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 16px 0;
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="container flex justify-between items-center">
+    <div class="flex items-center gap-md">
+      <a href="/" class="logo">EliteEstates</a>
+    </div>
+
+    <nav class="nav-links items-center">
+      <a href="/" class="active">Home</a>
+      <a href="/apartments">Apartments</a>
+      <a href="/promotions">Promotions</a>
+    </nav>
+
+    <div class="header-actions flex items-center gap-sm">
+      <button class="nav-links"><span class="material-symbols-outlined">search</span></button>
+      <button class="nav-links"><span class="material-symbols-outlined">notifications</span></button>
+      <button class="nav-links"><span class="material-symbols-outlined">settings</span></button>
+
+      <!-- EDITED: Buttons converted to anchor tags routing to the auth page -->
+      <a th:href="@{/auth}" class="btn btn-outline" style="display: inline-block; text-align: center;">Login</a>
+      <a th:href="@{/auth?tab=register}" class="btn btn-primary" style="display: inline-block; text-align: center;">Register</a>
+
+      <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoZ4YTndyOvTG2f0FaX_sMSX4d9X56O5uLdPPX1GK_WrRT8PPZtprWbILOMxXhdI0y0i1bmUjlOE7xdfjHHm74c6c-yFdwxJ6Pai0NXcXGwk_W6aaJMFcT5atrCA4hOZBZPJWKuXW9xTjLWBFYhhsgD9ggt-e_Nog7SSMQAchgXIIDli55ublZ2hvlYM2ASr9C_ZxTsgIeJTJuuqyC-bOGJOqprFxZUxNQoURcuP80zldnNoBvExo4" alt="User avatar" class="avatar"/>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+      <h1>Curated Living Spaces for the Discerning Visionary</h1>
+      <p>Discover an exclusive portfolio of architectural masterpieces and premier luxury residences across the world's most sought-after locations.</p>
+
+    </div>
+  </section>
+
+  <!-- Featured Properties -->
+  <section class="section container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Featured Properties</h2>
+        <p style="color: var(--text-muted);">A selection of our most distinguished recent acquisitions.</p>
+      </div>
+      <a href="#" class="view-all">View All <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span></a>
+    </div>
+
+    <div class="property-grid">
+      <!-- Property Card 1 -->
+      <div class="property-card">
+        <div class="property-img-wrap">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvYQaX6j9000hCUfoSq6U_mTUV446QBc8H0vK3RtwAR3G-og1vyv8BqmJUJCr2kuxMLO9cfbGkgOllftIZqUtrArsP7A9GENXUHXzbCrGzWDlFEhoWxyao1PKyi_1760ldjyowQSmyg1ysdBD3qs99ihm2Q4Y-zhYzdDyPcn_25Vedwihdi7Jr9usEHYMvTtSOrPWGU2CJtEiVX1fbbx78wjX0dVYNHWwmqeGzaX7Mil-o1gujMD-0" alt="Villa">
+          <div class="badge">Just Listed</div>
+        </div>
+        <div class="property-details">
+          <h3 class="property-title">The Glass Pavilion</h3>
+          <p class="property-location"><span class="material-symbols-outlined" style="font-size: 16px;">location_on</span> Beverly Hills, CA</p>
+          <div class="property-price">$8,500,000</div>
+          <div class="property-stats">
+            <div class="stat-item">
+              <span class="material-symbols-outlined">bed</span>
+              <span>4 Beds</span>
+            </div>
+            <div class="stat-item bordered">
+              <span class="material-symbols-outlined">shower</span>
+              <span>5 Baths</span>
+            </div>
+            <div class="stat-item bordered">
+              <span class="material-symbols-outlined">square_foot</span>
+              <span>5,200 sqft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Card 2 -->
+      <div class="property-card">
+        <div class="property-img-wrap">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJAF0h3CYIaCeRayU2aCqqlmOefuf38mHKnuXy5qqtD4LyMme7yvkaBa7DkbtG2VrysPhh3Svns_m4jdtIFN7ti2Bfc_QSV_wMGKlFkp3UhH5Zyvnk7GDyZS0xt91aQRrsuTimNbAncPiVjMp2aJwBdny9e5adzqLez6ujTlRtUvIy6AzcMCVuz8PziJHzx8bLKfnQvbQRqdRcmDjrAFvGs5Oqt8m3OePJgpeR3CyvoQ95MWEjZPxm" alt="Penthouse">
+        </div>
+        <div class="property-details">
+          <h3 class="property-title">Skyline Penthouse</h3>
+          <p class="property-location"><span class="material-symbols-outlined" style="font-size: 16px;">location_on</span> Manhattan, NY</p>
+          <div class="property-price">$12,250,000</div>
+          <div class="property-stats">
+            <div class="stat-item">
+              <span class="material-symbols-outlined">bed</span>
+              <span>3 Beds</span>
+            </div>
+            <div class="stat-item bordered">
+              <span class="material-symbols-outlined">shower</span>
+              <span>4.5 Baths</span>
+            </div>
+            <div class="stat-item bordered">
+              <span class="material-symbols-outlined">square_foot</span>
+              <span>4,100 sqft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Card 3 -->
+      <div class="property-card">
+        <div class="property-img-wrap">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeJyLeldG_SkdgrCm3QzT9NgN0Vh-byF2pRzVq-bK7X9Dh1jKYFHuQmTcZ8aU9ashulLMfub_vk8M_r6inI3lInb2M__bYcrPSmtsvds_22g8OtWCt0QGw4JRXtncYL7dsVquvKXeX-XfdPCjt--N1x96QXblTFJVX2PIMYMIGpfGIrncjWQDmRNbdUPJt_exERfUyNnomsYLzAzAlDHvrSv-M5NT5HIkq_uriHfYCl3ztCNZG-Xjs" alt="Coastal Home">
+        </div>
+        <div class="property-details">
+          <h3 class="property-title">Coastal Serenity</h3>
+          <p class="property-location"><span class="material-symbols-outlined" style="font-size: 16px;">location_on</span> Miami, FL</p>
+          <div class="property-price">$6,900,000</div>
+          <div class="property-stats">
+            <div class="stat-item">
+              <span class="material-symbols-outlined">bed</span>
+              <span>5 Beds</span>
+            </div>
+            <div class="stat-item bordered">
+              <span class="material-symbols-outlined">shower</span>
+              <span>6 Baths</span>
+            </div>
+            <div class="stat-item bordered">
+              <span class="material-symbols-outlined">square_foot</span>
+              <span>6,800 sqft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Stats Grid -->
+  <section class="section container">
+    <div class="about-grid">
+      <div class="about-content">
+        <h2 class="section-title">Architectural Integrity Meets Refined Comfort</h2>
+        <p>At EliteEstates, we curate spaces that transcend mere shelter. Our focus is on the seamless integration of structural precision and human-centric design, providing our elite clientele with environments that are both disciplined and deeply welcoming.</p>
+        <div class="stats-row">
+          <div class="stat-block stat-block-1">
+            <div class="stat-number">150+</div>
+            <div class="stat-label">Exclusive Properties</div>
+          </div>
+          <div class="stat-block stat-block-2">
+            <div class="stat-number">$2B+</div>
+            <div class="stat-label">Sales Volume</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-img">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXhyaUJf6T8mcL3cJ16vdmP8NGFGsMV73icWm0r0UTUEYxso3lulhR-9NQrDzqMOpadn1TJbpU5ut_UQB7I-5Ul2SWovIixgaxhIF8yqpntGvktMlCtlqqiEhngnLPH1xkYwmDfvlXCEeR2O4axE1zwUdxVyS73TjzaQliWsk_mZgB_v_iVOSUVG3JPpQaHmzZ31QqvCLQXhH9TUJ0q7Fp_HOhS-Y6gU5ohqGSzEiI3ysulKeHLOdc" alt="Architecture detail">
+      </div>
+    </div>
+  </section>
+
+  <!-- Promotional Banner -->
+  <section class="section container">
+    <div class="promo-banner">
+      <div class="promo-content">
+        <span class="promo-tag">Limited Time Offer</span>
+        <h2>Winter Acquisition Advantage</h2>
+        <p>Engage with our private advisory team before the season ends to access off-market listings and exclusive financing structures reserved for our premier clients.</p>
+      </div>
+      <button class="btn">Schedule Consultation</button>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <span class="footer-brand">EliteEstates</span>
+        <p style="color: rgba(255,255,255,0.8);">Curating architectural masterpieces and luxury residences globally.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Offices</h4>
+        <span>New York</span>
+        <span>Los Angeles</span>
+        <span>London</span>
+        <span>Dubai</span>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <div class="footer-icons">
+          <a href="#"><span class="material-symbols-outlined">share</span></a>
+          <a href="#"><span class="material-symbols-outlined">mail</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 EliteEstates Luxury Realty. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
