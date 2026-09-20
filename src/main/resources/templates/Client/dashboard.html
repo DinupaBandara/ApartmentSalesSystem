@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Customer Dashboard - SkyLine</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* =========================================
+           DASHBOARD SPECIFIC STYLES
+           ========================================= */
+        /* Welcome Banner */
+        .welcome-banner {
+            background-color: var(--color-primary); color: var(--color-on-primary);
+            border-radius: 12px; padding: 32px; position: relative; overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--color-primary-container);
+        }
+        .banner-bg {
+            position: absolute; inset: 0; opacity: 0.2;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDR7PkCiGXa77vd1_2ib7pZCzWoMhFvcZ1TJADyMgqokROOWJnagVojHvbDiWPVqH4nJorio3KNgnjU8LTkMhdwUFtzZn2Zg8b__u3rd2TiwNOqF-yiHERtM2C--5Blu8dRlMHHWCONhmjpdW8tWeYbJKFkBx4UhowoXwGpEL5U9hUF-SHhdoeDzCxdKXdwvOnikmLh1kjP1cdfJsh6qImMrhKGcLMkjD-8r_G9r4F0StvsbzA-m8Jh');
+            background-size: cover; background-position: center;
+        }
+        .banner-content { position: relative; z-index: 10; }
+        .banner-content p { max-width: 42rem; opacity: 0.8; margin-top: 8px; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            gap: var(--space-gutter);
+            /* Automatically scales from 1 to 3 columns based on window width */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .stat-card {
+            background-color: var(--color-surface); border-radius: 12px; padding: 24px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); border: 1px solid rgba(197, 198, 205, 0.3);
+            transition: box-shadow 0.2s;
+        }
+        .stat-card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
+        .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .stat-title { color: var(--color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { color: var(--color-primary); margin-bottom: 8px; }
+        .stat-meta { display: flex; align-items: center; gap: 4px; }
+        .stat-meta .material-symbols-outlined { font-size: 16px; }
+
+    </style>
+</head>
+<body>
+
+<!-- Side Navigation Desktop & Global Styles -->
+<div th:replace="~{Client/fragments/client-sidebar :: client-sidebar}"></div>
+
+<!-- Mobile Top Bar -->
+<div class="mobile-header">
+    <h1 class="headline-lg-mobile" style="color: var(--color-primary);">SkyLine</h1>
+    <button class="menu-btn">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+</div>
+
+<!-- Main Content Area -->
+<main class="main-content">
+    <div class="container">
+
+        <!-- Welcome Banner -->
+        <header class="welcome-banner">
+            <div class="banner-bg"></div>
+            <div class="banner-content">
+                <h1 class="display-lg">Welcome, <span th:text="${client.fullName}">Client</span></h1>
+                <p class="body-lg">Manage your premium property portfolio and stay updated on your latest investments.</p>
+            </div>
+        </header>
+
+        <!-- Quick Stats Grid -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title label-sm">Available Apartments</span>
+                    <span class="material-symbols-outlined" style="color: var(--color-secondary);">apartment</span>
+                </div>
+                <div class="stat-value headline-lg">24</div>
+                <div class="stat-meta" style="color: var(--color-secondary);">
+                    <span class="material-symbols-outlined">trending_up</span>
+                    <span class="label-sm">New listings today</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title label-sm">My Reservations</span>
+                    <span class="material-symbols-outlined" style="color: var(--color-tertiary-container);">home_work</span>
+                </div>
+                <div class="stat-value headline-lg">0</div>
+                <div class="stat-meta" style="color: var(--color-on-surface-variant);">
+                    <span class="material-symbols-outlined">pending</span>
+                    <span class="label-sm">Awaiting final approval</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title label-sm">Pending Payments</span>
+                    <span class="material-symbols-outlined" style="color: var(--color-error);">payments</span>
+                </div>
+                <div class="stat-value headline-lg">Rs. 0</div>
+                <div class="stat-meta" style="color: var(--color-error);">
+                    <span class="material-symbols-outlined">error</span>
+                    <span class="label-sm">Due in 3 days</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+</body>
+</html>

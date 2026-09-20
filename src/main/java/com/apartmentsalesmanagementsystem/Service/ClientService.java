@@ -24,6 +24,6 @@ public class ClientService {
         return null;
     }
     public void updateClient(Client client) {
-        clientRepository.save(client); // Assuming clientRepository is your JpaRepository
+        clientRepository.save(client);
     }
 }

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>My Profile - SkyLine</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* =========================================
+           PROFILE SPECIFIC STYLES
+           ========================================= */
+        /* Override global container max-width for forms */
+        .container {
+            max-width: 800px;
+        }
+
+        /* Profile Layout Elements */
+        .profile-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 8px; padding-bottom: 24px; border-bottom: 1px solid var(--color-slate-200);
+        }
+
+        .profile-card {
+            background-color: var(--color-surface); border-radius: 12px; padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid rgba(197, 198, 205, 0.3);
+        }
+
+        .avatar-section {
+            display: flex; align-items: center; gap: 24px; margin-bottom: 32px;
+        }
+
+        .avatar-large {
+            width: 80px; height: 80px; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--color-primary-fixed); background-color: var(--color-surface-container-high);
+            display: flex; align-items: center; justify-content: center; color: var(--color-primary);
+        }
+
+        .avatar-large .material-symbols-outlined { font-size: 40px; }
+
+        .avatar-text h2 { color: var(--color-primary); margin-bottom: 4px; }
+        .avatar-text p { color: var(--color-on-surface-variant); }
+
+        /* Forms Styling */
+        .form-row {
+            display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 24px;
+        }
+        @media (min-width: 768px) { .form-row { grid-template-columns: 1fr 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+
+        label { font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--color-primary); }
+
+        input[type="text"], input[type="email"], input[type="tel"] {
+            width: 100%; background: var(--color-surface-container-lowest); border: 1px solid var(--color-outline-variant);
+            border-radius: 8px; padding: 12px 16px; font-family: var(--font-body); font-size: 16px;
+            color: var(--color-on-surface); outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus { border-color: var(--color-sapphire-pro); box-shadow: 0 0 0 2px rgba(30,58,138,0.1); }
+
+        input[readonly] { background-color: var(--color-surface-container-low); color: var(--color-on-surface-variant); cursor: not-allowed; }
+
+        .btn-submit {
+            background: var(--color-secondary); color: var(--color-on-primary); border: none;
+            padding: 12px 24px; border-radius: 8px; font-weight: 600; font-size: 14px;
+            cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-submit:hover { background: #005137; }
+
+        .section-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--color-primary); margin-bottom: 24px; margin-top: 32px; border-bottom: 1px solid var(--color-slate-200); padding-bottom: 12px;}
+
+    </style>
+</head>
+<body>
+
+<!-- Side Navigation Desktop & Global Styles -->
+<div th:replace="~{Client/fragments/client-sidebar :: client-sidebar}"></div>
+
+<!-- Mobile Top Bar -->
+<div class="mobile-header">
+    <h1 class="headline-lg-mobile" style="color: var(--color-primary);">SkyLine</h1>
+    <button class="menu-btn">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+</div>
+
+<!-- Main Content Area -->
+<main class="main-content">
+    <div class="container">
+
+        <div class="profile-card">
+
+            <!-- Success Message Alert -->
+            <div th:if="${param.success}" style="background-color: #d1e7dd; color: #0f5132; padding: 12px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; font-weight: 600; text-align: center;">
+                Profile updated successfully!
+            </div>
+
+            <div class="avatar-section">
+                <div class="avatar-large">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div class="avatar-text">
+                    <h2 class="headline-md" th:text="${client.fullName}">Client Name</h2>
+                    <p class="body-sm" th:text="${client.email}">client@example.com</p>
+                </div>
+            </div>
+
+            <!-- Profile Update Form -->
+            <form th:action="@{/profile/update}" method="post" th:object="${client}">
+                <div class="section-title">Personal Information</div>
+
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input id="fullName" name="fullName" type="text" th:value="${client.fullName}" required/>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="nic">National ID (NIC)</label>
+                        <input id="nic" name="nic" type="text" th:value="${client.nic}" required/>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="phone">Phone Number</label>
+                        <input id="phone" name="phone" type="tel" th:value="${client.phone}" placeholder="+1 (555) 000-0000"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <!-- Email is read-only for security and authentication identity -->
+                    <input id="email" name="email" type="email" th:value="${client.email}" readonly/>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 32px;">
+                    <button type="submit" class="btn-submit">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">save</span>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
