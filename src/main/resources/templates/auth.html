@@ -61,6 +61,9 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
         a { text-decoration: none; }
 
         /* Icon Reset */
@@ -328,16 +331,6 @@
                         <input class="input-field" id="login-password" name="password" placeholder="••••••••" required type="password"/>
                     </div>
 
-                    <div class="checkbox-row">
-                        <div class="checkbox-container">
-                            <input class="checkbox-input" id="remember-me" name="remember-me" type="checkbox"/>
-                            <label class="checkbox-label" for="remember-me">Remember me</label>
-                        </div>
-                        <div>
-                            <a class="link-primary" href="#">Forgot Password?</a>
-                        </div>
-                    </div>
-
                     <button class="btn-submit" type="submit">Login</button>
                 </form>
             </div>
@@ -357,8 +350,8 @@
 
                     <div class="form-grid-2">
                         <div>
-                            <label class="input-label" for="reg-email">Email</label>
-                            <input class="input-field" id="reg-email" th:field="*{email}" placeholder="name@example.com" required type="email"/>
+                            <label class="input-label" for="reg-nic">National ID (NIC)</label>
+                            <input class="input-field" id="reg-nic" th:field="*{nic}" placeholder="123456789V" required type="text"/>
                         </div>
                         <div>
                             <label class="input-label" for="reg-phone">Phone Number</label>
@@ -367,22 +360,19 @@
                     </div>
 
                     <div>
-                        <label class="input-label" for="reg-password">Password</label>
-                        <input class="input-field" id="reg-password" th:field="*{password}" placeholder="••••••••" required type="password"/>
-                    </div>
-                    <div>
-                        <label class="input-label" for="reg-confirm-password">Confirm Password</label>
-                        <input class="input-field" id="reg-confirm-password" placeholder="••••••••" required type="password"/>
+                        <label class="input-label" for="reg-email">Email Address</label>
+                        <input class="input-field" id="reg-email" th:field="*{email}" placeholder="name@example.com" required type="email"/>
                     </div>
 
-                    <div class="checkbox-row-start">
-                        <div class="checkbox-container">
-                            <input class="checkbox-input" id="terms" name="terms" required type="checkbox"/>
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="input-label" for="reg-password">Password</label>
+                            <input class="input-field" id="reg-password" th:field="*{password}" placeholder="••••••••" required type="password"/>
                         </div>
-                        <div class="checkbox-text-wrap">
-                            <label class="checkbox-label" for="terms">
-                                I agree to the <a class="link-inline" href="#">Terms of Service</a> and <a class="link-inline" href="#">Privacy Policy</a>.
-                            </label>
+                        <div>
+                            <label class="input-label" for="reg-confirm-password">Confirm Password</label>
+                            <!-- Note: Confirm password does not bind to the entity field directly -->
+                            <input class="input-field" id="reg-confirm-password" name="confirmPassword" placeholder="••••••••" required type="password"/>
                         </div>
                     </div>
 
