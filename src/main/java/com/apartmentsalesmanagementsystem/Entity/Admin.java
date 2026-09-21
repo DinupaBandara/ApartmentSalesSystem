@@ -32,4 +32,8 @@ public class Admin {
     // e.g., "SUPER_ADMIN" or "ADMIN"
     @Column(nullable = false)
     private String role;
+
+    // Track active or deactivated status
+    @Column(nullable = false)
+    private Boolean active = true;
 }

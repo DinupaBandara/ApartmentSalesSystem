@@ -3,17 +3,21 @@ package com.apartmentsalesmanagementsystem.Controller;
 import com.apartmentsalesmanagementsystem.Entity.Admin;
 import com.apartmentsalesmanagementsystem.Entity.Client;
 import com.apartmentsalesmanagementsystem.Repository.AdminRepository;
+import com.apartmentsalesmanagementsystem.Service.AdminService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class PageController {
 
-    @Autowired
-    private AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
+    private final AdminService adminService; // Injected to handle profile saving
 
     @GetMapping("/")
     public String indexPage() {
@@ -80,6 +84,24 @@ public class PageController {
         model.addAttribute("activeTab", "profile");
         model.addAttribute("admin", admin);
         return "Admin/admin-profile";
+    }
+
+    // Handle Admin Profile Form Submission (Save Changes)
+    @PostMapping("/admin/profile/update")
+    public String updateAdminProfile(@ModelAttribute Admin updatedAdmin, HttpSession session) {
+        Admin currentAdmin = (Admin) session.getAttribute("loggedInAdmin");
+        if (currentAdmin == null) {
+            return "redirect:/auth";
+        }
+
+        // Update name in the database using the service
+        adminService.updateAdminInfo(currentAdmin.getId(), updatedAdmin.getFullName(), currentAdmin.getRole());
+
+        // Refresh session attributes so the changes display instantly across the navbar/header
+        currentAdmin.setFullName(updatedAdmin.getFullName());
+        session.setAttribute("loggedInAdmin", currentAdmin);
+
+        return "redirect:/admin/profile?success=true";
     }
 
     @GetMapping("/admin/admin-management")
