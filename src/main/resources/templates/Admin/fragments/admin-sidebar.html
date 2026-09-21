@@ -211,9 +211,16 @@
             <span class="nav-text label-md">Manage Clients</span>
         </a>
         <a th:href="@{/admin/admin-management}" class="nav-item" th:classappend="${activeTab == 'admins'} ? 'active' : ''">
-            <span class="material-symbols-outlined" th:classappend="${activeTab == 'clients'} ? 'icon-filled' : ''">identity_platform</span>
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'admins'} ? 'icon-filled' : ''">identity_platform</span>
             <span class="nav-text label-md">Manage Admins</span>
         </a>
+
+        <!-- NEW Manage Agents Link -->
+        <a th:href="@{/admin/agent-management}" class="nav-item" th:classappend="${activeTab == 'agents'} ? 'active' : ''">
+            <span class="material-symbols-outlined" th:classappend="${activeTab == 'agents'} ? 'icon-filled' : ''">support_agent</span>
+            <span class="nav-text label-md">Manage Agents</span>
+        </a>
+
         <a th:href="@{/admin/apartments}" class="nav-item" th:classappend="${activeTab == 'apartments'} ? 'active' : ''">
             <span class="material-symbols-outlined" th:classappend="${activeTab == 'apartments'} ? 'icon-filled' : ''">apartment</span>
             <span class="nav-text label-md">Apartments</span>

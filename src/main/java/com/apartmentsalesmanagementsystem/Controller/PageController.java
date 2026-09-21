@@ -1,8 +1,10 @@
 package com.apartmentsalesmanagementsystem.Controller;
 
 import com.apartmentsalesmanagementsystem.Entity.Admin;
+import com.apartmentsalesmanagementsystem.Entity.Agent;
 import com.apartmentsalesmanagementsystem.Entity.Client;
 import com.apartmentsalesmanagementsystem.Repository.AdminRepository;
+import com.apartmentsalesmanagementsystem.Repository.AgentRepository;
 import com.apartmentsalesmanagementsystem.Service.AdminService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class PageController {
 
     private final AdminRepository adminRepository;
+    private final AgentRepository agentRepository;
     private final AdminService adminService;
 
     @GetMapping("/")
@@ -95,7 +98,7 @@ public class PageController {
         }
 
         // Update name and role info in the database using the service
-        adminService.updateAdminInfo(currentAdmin.getId(), updatedAdmin.getFullName(), currentAdmin.getRole());
+        adminService.updateAdminInfo(currentAdmin.getId(), updatedAdmin.getFullName(), updatedAdmin.getRole());
 
         // Refresh session attributes so the changes display instantly across the navbar/header
         currentAdmin.setFullName(updatedAdmin.getFullName());
@@ -118,5 +121,21 @@ public class PageController {
         model.addAttribute("newAdmin", new Admin());
 
         return "Admin/admin-management";
+    }
+
+    @GetMapping("/admin/agent-management")
+    public String showAgentManagement(HttpSession session, Model model) {
+        // Secure the route
+        Admin admin = (Admin) session.getAttribute("loggedInAdmin");
+        if (admin == null) {
+            return "redirect:/auth";
+        }
+
+        model.addAttribute("activeTab", "agents");
+        // Fetch all agents and initialize new object for the add modal
+        model.addAttribute("agentsList", agentRepository.findAll());
+        model.addAttribute("newAgent", new Agent());
+
+        return "Agent/agent-management";
     }
 }
