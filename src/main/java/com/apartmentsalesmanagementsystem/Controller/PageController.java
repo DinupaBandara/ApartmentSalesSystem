@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class PageController {
 
     private final AdminRepository adminRepository;
-    private final AdminService adminService; // Injected to handle profile saving
+    private final AdminService adminService;
 
     @GetMapping("/")
     public String indexPage() {
@@ -94,7 +94,7 @@ public class PageController {
             return "redirect:/auth";
         }
 
-        // Update name in the database using the service
+        // Update name and role info in the database using the service
         adminService.updateAdminInfo(currentAdmin.getId(), updatedAdmin.getFullName(), currentAdmin.getRole());
 
         // Refresh session attributes so the changes display instantly across the navbar/header
@@ -117,6 +117,6 @@ public class PageController {
         model.addAttribute("adminsList", adminRepository.findAll());
         model.addAttribute("newAdmin", new Admin());
 
-        return "admin/admin-management";
+        return "Admin/admin-management";
     }
 }
